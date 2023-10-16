@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">MarvelComposee</string>
+    <string name="share">Share caracter\n</string>
+    <string name="share_character">Share Character\n</string>
+</resources>
