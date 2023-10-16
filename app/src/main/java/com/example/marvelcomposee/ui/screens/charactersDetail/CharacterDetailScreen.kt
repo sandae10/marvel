@@ -1,5 +1,6 @@
 package com.example.marvelcomposee.ui.screens.charactersDetail
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -11,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.MoreVert
@@ -20,6 +20,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -45,6 +46,7 @@ import com.example.marvelcomposee.data.entities.Character
 import com.example.marvelcomposee.data.entities.Reference
 import com.example.marvelcomposee.data.entities.Url
 import com.example.marvelcomposee.data.repositories.CharacterRepository
+import com.example.marvelcomposee.data.shared.ArrowBackIcon
 
 @Composable
 fun CharacterDetailScreen(id: Int,  onUpClick: () -> Unit) {
@@ -55,38 +57,13 @@ fun CharacterDetailScreen(id: Int,  onUpClick: () -> Unit) {
     characterState?.let { c -> CharacterDetailScreen(it , unOpClick)}
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun CharacterDetailScaffold(
-    character: Character,
-    onUpClick: () -> Unit,
-    content: @Composable (PaddingValues) -> Unit)
-{
-    Scaffold(
-        topBar ={
-            TopAppBar(
-                title = { Text(character.name)},
-                navigationIcon = { (onUpClick)} ,
-                actions = {
-                    AppBarOverflowMenu(urls = character.urls) }
-            )
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = { /*TODO*/ }) {
-                Icon(imageVector = Icons.Default.Share, contentDescription = stringResource(id = R.string.share_character)
-                )
-            }
-        },
-        floatingActionButtonPosition = FabPosition.Center,
-        content = content
-    )
-
-}
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CharacterDetailScreen(character: Character , onUpClick: () -> Unit) {
-    CharacterDetailScaffold(character = character, onUpClick = onUpClick)
- {  padding ->
+    
+    CharacterDetailScaffold(
+        character = character,
+        onUpClick = onUpClick
+    ) {  padding ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -95,15 +72,17 @@ fun CharacterDetailScreen(character: Character , onUpClick: () -> Unit) {
             item {
                 Header(character)
             }
-            section(Icons.Default.MoreVert, "Series", character.series)
-            section(Icons.Default.List, "Events", character.events)
-            section(Icons.Default.List, "Comics", character.comics)
-            section(Icons.Default.List, "Stories", character.stories)
+            section(Icons.Default.MoreVert, R.string.series, character.series)
+            section(Icons.Default.List,  R.string.events, character.events)
+            section(Icons.Default.List,  R.string.comic, character.comics)
+            section(Icons.Default.List,  R.string.stories, character.stories)
         }
     }
 }
 
-fun LazyListScope.section(icon: ImageVector, name: String, items: List<Reference>) {
+@OptIn(ExperimentalMaterial3Api::class)
+fun LazyListScope.section(icon: ImageVector, @StringRes name: Int, items: List<Reference>) {
+    if (items.isEmpty()) return
     item {
         Text(
             text = "Comics",
@@ -111,9 +90,10 @@ fun LazyListScope.section(icon: ImageVector, name: String, items: List<Reference
             modifier = Modifier.padding(16.dp)
         )
     }
-    items( items){
-
-
+    items(items){
+       ListItem(
+           headlineText = { Icon(imageVector = Icons.Default.List, contentDescription = null
+       )})
     }
 }
 
