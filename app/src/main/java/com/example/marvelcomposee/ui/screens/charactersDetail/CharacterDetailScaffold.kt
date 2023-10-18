@@ -1,23 +1,29 @@
 package com.example.marvelcomposee.ui.screens.charactersDetail
 
 import android.content.Context
-import android.content.Intent
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.app.ShareCompat
 import com.example.marvelcomposee.R
 import com.example.marvelcomposee.data.entities.Character
+import com.example.marvelcomposee.data.shared.ArrowBackIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,36 +32,40 @@ fun CharacterDetailScaffold(
     onUpClick: () -> Unit,
     content: @Composable (PaddingValues) -> Unit)
 {
-    val extent = LocalContext.current
+    val context = LocalContext.current
     Scaffold(
-        topBar ={
-            TopAppBar(
-                title = { Text(character.name) },
-                navigationIcon = { (onUpClick)} ,
-                actions = {
-                    AppBarOverflowMenu(urls = character.urls) }
-            )
-        },
+
         floatingActionButton = {
-            FloatingActionButton(onClick = { shareCharacter(context =  , character) }) {
+            if(character.urls.isEmpty()) {
+            FloatingActionButton(onClick = { shareCharacter(context , character) }) {
                 Icon(
                     imageVector = Icons.Default.Share,
-                    contentDescription = stringResource(id = R.string.share_character
+                    contentDescription = stringResource(id = R.string.share_character)
                     )
-                )
+                }
             }
         },
         floatingActionButtonPosition = FabPosition.Center,
+        bottomBar = {
+            BottomAppBar(
+
+            ) {
+                AppBarIcon(imageVector = Icons.Default.Menu, onClick = { /*TODO*/ })
+                Spacer(modifier = Modifier.weight(1f))
+                AppBarIcon(imageVector = Icons.Default.Favorite, onClick = { /*TODO*/ })
+            }
+        },
         content = content
+
     )
 }
 
 fun shareCharacter(context : Context, character: Character){
-    val intent = ShareCompat
+    ShareCompat
         .IntentBuilder(context)
         .setType("text/plain")
         .setSubject(character.name)
         .setText(character.urls.first().url)
         .intent
-      context.startActivity(intent)
+        .also(context::startActivity)
 }

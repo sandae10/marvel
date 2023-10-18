@@ -4,21 +4,29 @@ import com.example.marvelcomposee.data.network.ApiClient
 import com.example.marvelcomposee.data.entities.Character
 import com.example.marvelcomposee.data.entities.Reference
 import com.example.marvelcomposee.data.network.entities.CharacterApi as NetworkCharacter
-
 import com.example.marvelcomposee.data.network.entities.asString
 
-object CharacterRepository {
-
-    suspend fun getCharacters(): List<Character> {
-        val result = ApiClient.charactersService.getCharacter(0,100)
-
-        return result.data.results.map  { it.asCharacter() }
+object CharacterRepository : Repository<Character>() {
+    suspend fun get() : List<Character> = super.get {
+        ApiClient
+            .charactersService
+            .getCharacter(0,100)
+            .data
+            .results
+            .map { it.asCharacter() }
     }
-
-    suspend fun findCharacter(characterId: Character): Character {
-        val result = ApiClient.charactersService.findCharacter(characterId)
-        return result.data.results.first().asCharacter()
-    }
+    suspend fun find(id: Int): Character = super.find(
+        id,
+        findActionRemote = {
+                ApiClient
+                    .charactersService
+                    .findCharacter(id)
+                    .data
+                    .results
+                    .first()
+                    .asCharacter()
+        }
+    )
 }
 
 fun NetworkCharacter.asCharacter(): Character {
