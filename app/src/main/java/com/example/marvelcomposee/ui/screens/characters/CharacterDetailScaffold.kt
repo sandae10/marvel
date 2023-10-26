@@ -1,4 +1,4 @@
-package com.example.marvelcomposee.ui.screens.charactersDetail
+package com.example.marvelcomposee.ui.screens.characters
 
 import android.content.Context
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,10 +12,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -23,7 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.app.ShareCompat
 import com.example.marvelcomposee.R
 import com.example.marvelcomposee.data.entities.Character
-import com.example.marvelcomposee.data.shared.ArrowBackIcon
+import com.example.marvelcomposee.ui.screens.charactersDetail.AppBarIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

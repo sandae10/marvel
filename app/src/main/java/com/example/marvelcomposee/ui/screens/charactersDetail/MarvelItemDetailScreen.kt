@@ -4,24 +4,28 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.marvelcomposee.data.entities.MarvelItem
+import com.example.marvelcomposee.ui.screens.characters.Header
+import com.example.marvelcomposee.ui.screens.characters.section
 
 @Composable
-fun MarvelItemDetailScreen(
-    marvelItem: MarvelItem,
-    onUpClick: () -> Unit
-) {
+fun MarvelItemDetailScreen(loading : Boolean = false, marvelItem: MarvelItem) {
+    if (loading) {
+        CircularProgressIndicator()
+    }
+
+    if (marvelItem != null) {
     MarvelItemDetailScaffold(
-        marvelItem = marvelItem,
-        onUpClick= onUpClick
+        marvelItem = marvelItem
     ){ padding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(padding)
-        ){
+       LazyColumn(
+           modifier = Modifier
+               .fillMaxWidth()
+               .padding(padding))
+        {
             item { 
                 Header(marvelItem = marvelItem)
             }
@@ -29,7 +33,10 @@ fun MarvelItemDetailScreen(
                 val (icon, @StringRes stringRes) = it.type.createUiData()
                 section(icon, stringRes, it.references)
             }
-        }
+             }
+         }
     }
-
 }
+
+
+

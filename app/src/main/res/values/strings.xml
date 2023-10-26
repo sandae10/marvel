@@ -8,4 +8,14 @@
     <string name="characters">Characters\n</string>
     <string name="home">home</string>
     <string name="settings">settings</string>
+    <string name="series">series\n</string>
+    <string name="comic">comic</string>
+    <string name="stories">stories</string>
+    <string name="magazine">magazine\n</string>
+    <string name="trade_paperback">Trade Paperback\n</string>
+    <string name="hardcover">Hardcover</string>
+    <string name="digest">Digest</string>
+    <string name="graphic_novel">Graphic Novel</string>
+    <string name="digital_comic">Digital Comic</string>
+    <string name="infinite_comic">Infinite Comic</string>
 </resources>

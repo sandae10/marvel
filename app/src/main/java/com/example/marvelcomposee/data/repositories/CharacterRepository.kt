@@ -3,11 +3,12 @@ package com.example.marvelcomposee.data.repositories
 import com.example.marvelcomposee.data.network.ApiClient
 import com.example.marvelcomposee.data.entities.Character
 import com.example.marvelcomposee.data.entities.Reference
+import com.example.marvelcomposee.data.entities.Result
 import com.example.marvelcomposee.data.network.entities.CharacterApi as NetworkCharacter
 import com.example.marvelcomposee.data.network.entities.asString
 
 object CharacterRepository : Repository<Character>() {
-    suspend fun get() : List<Character> = super.get {
+    suspend fun get() : Result<List<Character>> = super.get {
         ApiClient
             .charactersService
             .getCharacter(0,100)
@@ -15,7 +16,7 @@ object CharacterRepository : Repository<Character>() {
             .results
             .map { it.asCharacter() }
     }
-    suspend fun find(id: Int): Character = super.find(
+    suspend fun find(id: Int): Result<Character> = super.find(
         id,
         findActionRemote = {
                 ApiClient

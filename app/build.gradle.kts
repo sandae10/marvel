@@ -74,6 +74,8 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp")
     implementation("com.squareup.okhttp3:logging-interceptor")
     implementation("androidx.media3:media3-common:1.1.1")
+    implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
+    implementation("io.arrow-kt:arrow-core:1.0.1")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

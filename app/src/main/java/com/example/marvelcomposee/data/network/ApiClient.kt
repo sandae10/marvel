@@ -1,6 +1,5 @@
 package com.example.marvelcomposee.data.network
 
-import android.os.Build
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response

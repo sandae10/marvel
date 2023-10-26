@@ -1,66 +1,69 @@
-package com.example.marvelcomposee.ui.screens
+package com.example.marvelcomposee.ui.screens.comics
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.marvelcomposee.R
 import com.example.marvelcomposee.data.entities.Comic
-import com.example.marvelcomposee.data.repositories.ComicsRepository
+import com.example.marvelcomposee.ui.screens.charactersDetail.MarvelItemDetailScreen
 import com.example.marvelcomposee.ui.screens.charactersDetail.MarvelItemsList
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,
-    ExperimentalPagerApi::class
-)
-@Composable
-fun ComicsScreen(onClick : (Comic) -> Unit) {
 
-    var comicsSate by remember () { mutableStateOf(emptyList<Comic>()) }
-    LaunchedEffect(Unit) {
-        comicsSate = ComicsRepository.get()
-    }
+@OptIn(ExperimentalFoundationApi::class, ExperimentalPagerApi::class)
+@Composable
+fun ComicsScreen(onClick : (Comic) -> Unit, viewModel : ComicViewModel = viewModel()) {
+
 
     val formats = Comic.Format.values().toList()
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState( )
 
     Column {
-        ComicFormatsTabRow(pagerState, formats)
-        HorizontalPager( pageCount = formats.size) {
-        }
-        MarvelItemsList(
-            items = comicsSate,
-            onClick = onClick,
+        ComicFormatsTabRow(
+            pagerState = pagerState,
+            formats = formats
         )
+        HorizontalPager(
+            count = formats.size,
+            state = pagerState
+        ) {page ->
+            val format = formats[page]
+            viewModel.formatRequested(format)
+            val pagerState by viewModel.state.getValue(format)
+            MarvelItemsList(
+                loading = pagerState.loading,
+                items = pagerState.items,
+                onClick = onClick,
+            )
+        }
     }
 }
 
+
+
 @Composable
 @OptIn(ExperimentalPagerApi::class, ExperimentalFoundationApi::class)
+
 private fun ComicFormatsTabRow(
     pagerState: PagerState,
     formats: List<Comic.Format>,
 ) {
-
     val scope = rememberCoroutineScope()
 
     ScrollableTabRow(
@@ -68,7 +71,9 @@ private fun ComicFormatsTabRow(
         edgePadding = 0.dp,
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
-                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                Modifier.pagerTabIndicatorOffset(
+                    pagerState,
+                    tabPositions)
             )
         }
     ) {
@@ -82,8 +87,19 @@ private fun ComicFormatsTabRow(
     }
 }
 
+
+@Composable
+fun ComicDetailScreen(viewModel: ComicDetailViewModel = viewModel()) {
+    viewModel.state.comic?.let {
+        MarvelItemDetailScreen(
+            loading = viewModel.state.loading,
+            marvelItem = it
+        )
+    }
+}
+
 @StringRes
-private fun Comic.Format.toStringRes(): Int = when (this) {
+fun Comic.Format.toStringRes(): Int = when (this) {
     Comic.Format.COMIC -> R.string.comic
     Comic.Format.MAGAZINE -> R.string.magazine
     Comic.Format.TRADE_PAPERBACK -> R.string.trade_paperback
